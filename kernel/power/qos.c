@@ -336,7 +336,6 @@ static inline int pm_qos_set_value_for_cpus(struct pm_qos_request *new_req,
 int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
 			 enum pm_qos_req_action action, int value)
 {
-	struct pm_qos_request *req = container_of(node, typeof(*req), node);
 	int prev_value, curr_value, new_value;
 	unsigned long cpus = 0;
 	int ret;
