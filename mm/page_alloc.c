@@ -4080,8 +4080,8 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
 	int compaction_retries;
 	int no_progress_loops;
 	unsigned int cpuset_mems_cookie;
-	int reserve_flags;
 	bool used_vmpressure = false;
+	int reserve_flags;
 	pg_data_t *pgdat = ac->preferred_zoneref->zone->zone_pgdat;
 	bool woke_kswapd = false;
 
@@ -4119,7 +4119,7 @@ retry_cpuset:
 
 	if (gfp_mask & __GFP_KSWAPD_RECLAIM) {
 		if (!woke_kswapd) {
-			atomic_inc(&pgdat->kswapd_waiters);
+			atomic_long_inc(&kswapd_waiters);
 			woke_kswapd = true;
 		}
 		wake_all_kswapds(order, gfp_mask, ac);
@@ -4356,7 +4356,7 @@ nopage:
 fail:
 got_pg:
 	if (woke_kswapd)
-		atomic_dec(&pgdat->kswapd_waiters);
+		atomic_long_dec(&kswapd_waiters);
 	if (used_vmpressure)
 		vmpressure_dec_users();
 	if (!page)
@@ -6338,7 +6338,6 @@ static void __paginginit free_area_init_core(struct pglist_data *pgdat)
 	pgdat_page_ext_init(pgdat);
 	spin_lock_init(&pgdat->lru_lock);
 	lruvec_init(node_lruvec(pgdat));
-	pgdat->kswapd_waiters = (atomic_t)ATOMIC_INIT(0);
 
 	pgdat->per_cpu_nodestats = &boot_nodestats;
 
