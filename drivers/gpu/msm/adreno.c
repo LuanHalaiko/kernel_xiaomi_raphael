@@ -372,7 +372,9 @@ static void adreno_pwr_on_work(struct work_struct *work)
 	struct kgsl_device *device = KGSL_DEVICE(adreno_dev);
 
 	mutex_lock(&device->mutex);
+
 	kgsl_pwrctrl_change_state(device, KGSL_STATE_ACTIVE);
+
 	mutex_unlock(&device->mutex);
 }
 
