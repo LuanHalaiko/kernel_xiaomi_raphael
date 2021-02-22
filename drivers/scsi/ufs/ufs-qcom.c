@@ -2286,7 +2286,6 @@ static struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
 #ifdef CONFIG_DEBUG_FS
 	.add_debugfs		= ufs_qcom_dbg_add_debugfs,
 #endif
-	.get_user_cap_mode	= ufs_qcom_get_user_cap_mode,
 };
 
 static struct ufs_hba_variant ufs_hba_qcom_variant = {

@@ -6564,6 +6564,10 @@ static void __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 			hba->ufs_stats.clk_rel.ctx = XFR_REQ_COMPL;
 			__ufshcd_release(hba, false);
 			__ufshcd_hibern8_release(hba, false);
+			if (cmd->request) {
+				ufshcd_vops_crypto_engine_cfg_end(hba,
+					lrbp, cmd->request);
+			}
 
 			req = cmd->request;
 			if (req) {
@@ -6638,8 +6642,10 @@ void ufshcd_abort_outstanding_transfer_requests(struct ufs_hba *hba, int result)
 			/* Mark completed command as NULL in LRB */
 			lrbp->cmd = NULL;
 			ufshcd_release_all(hba);
-			if (cmd->request)
-				ufshcd_pm_qos_put(hba);
+			if (cmd->request) {
+				ufshcd_vops_crypto_engine_cfg_end(hba,
+						lrbp, cmd->request);
+			}
 			/* Do not touch lrbp after scsi done */
 			cmd->scsi_done(cmd);
 		} else if (lrbp->command_type == UTP_CMD_TYPE_DEV_MANAGE) {
