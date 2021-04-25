@@ -6562,8 +6562,6 @@ static void __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 			__ufshcd_hibern8_release(hba, false);
 			if (cmd->request) {
 				ufshcd_pm_qos_put(hba);
-				ufshcd_vops_crypto_engine_cfg_end(hba,
-					lrbp, cmd->request);
 			}
 
 			req = cmd->request;
@@ -6646,8 +6644,6 @@ void ufshcd_abort_outstanding_transfer_requests(struct ufs_hba *hba, int result)
 				 * ->scsi_done() callback.
 				 */
 				ufshcd_pm_qos_put(hba);
-				ufshcd_vops_crypto_engine_cfg_end(hba,
-						lrbp, cmd->request);
 			}
 			/* Do not touch lrbp after scsi done */
 			cmd->scsi_done(cmd);
